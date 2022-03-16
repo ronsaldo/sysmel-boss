@@ -1,0 +1,1 @@
+BootstrapStackPointer equ 0x00007C00

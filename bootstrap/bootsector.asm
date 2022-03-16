@@ -2,23 +2,30 @@
 [bits 16]
 [org 0x7c00]
 
-BootstrapLoadBase equ 0x1000
-SectorsToRead equ 255
+BootSectorsToRead equ 63
 
 bootsectorEntry:
     mov [bootDrive], dl
 
+    xor ax, ax
+    mov ds, ax
+    cld
+
     ; Read disk
     mov ah, 02h
-    mov al, SectorsToRead
+    mov al, BootSectorsToRead
     mov cl, 2h
     mov ch, 0h
     mov dh, 0h
 
+    xor bx, bx
+    mov es, bx
+    mov bx, 0x7e00
+
     int 13h
-    jc bootError
-    ;cmp al, SectorsToRead
-    ;jne bootError
+    jc bootsectorError
+    cmp al, BootSectorsToRead
+    jne bootsectorError
 
     ; Disable interrupts.
     cli
@@ -32,9 +39,10 @@ bootsectorEntry:
     mov eax, cr0
     or eax, 1
     mov cr0, eax
+
     jmp 8h:boot32
 
-bootError:
+bootsectorError:
     jmp $
 
 [bits 32]
@@ -45,7 +53,7 @@ boot32:
     mov es, ax
     mov fs, ax
     mov gs, ax
-    jmp 0x10000
+    jmp 08h:bootstrapStart32
 
 bootDrive: db 0
 
