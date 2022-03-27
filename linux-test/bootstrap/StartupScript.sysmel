@@ -1,0 +1,2 @@
+## The bootstrap startup script. This is the place where we initialize the bootstrap environment
+## from the most primitive environment that is defined in assembly.
