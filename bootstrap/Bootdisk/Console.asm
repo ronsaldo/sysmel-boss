@@ -1,3 +1,5 @@
+SECTION .text
+
 ;; Text mode vram
 Console.VRAM equ 0xB8000
 Console.Columns equ 80
@@ -5,6 +7,7 @@ Console.Rows equ 24
 Console.Characters equ Console.Columns*Console.Rows
 
 ;; Clear the whole console.
+GLOBAL Console.clear
 Console.clear:
     push edi
     push ecx
@@ -23,10 +26,12 @@ Console.clear:
     ret
 
 ;; Puts an ASCII character in the console. Character in AL
+GLOBAL Console.putChar
 Console.putChar:
     mov ah, 07h
 
 ;; Puts a colored character in the console. Character in AL, color in AH
+GLOBAL Console.putColoredChar
 Console.putColoredChar:
     push edi
     
@@ -38,6 +43,7 @@ Console.putColoredChar:
     jmp Console.advanceColumn
 
 ;; String pointer in ESI, String size in ECX
+GLOBAL Console.putString
 Console.putString:
     mov al, [esi]
     dec ecx
@@ -47,9 +53,15 @@ Console.putString:
     jnz Console.putString
     ret
 
-Console.cursorIndex: dd 0
-Console.cursorRow: db 0
-Console.cursorColumn: db 0
-
 Console.advanceColumn:
     ret
+
+SECTION .data
+GLOBAL Console.cursorIndex
+Console.cursorIndex: dd 0
+
+GLOBAL Console.cursorRow
+Console.cursorRow: db 0
+
+GLOBAL Console.cursorColumn
+Console.cursorColumn: db 0

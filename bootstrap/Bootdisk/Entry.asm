@@ -1,19 +1,15 @@
 [bits 32]
-
 SECTION .text
-GLOBAL _start
-_start:
-    ;; For now just allocate everything in the stack.
-    and esp, -16
-    mov [ObjectModel.Heap.EndAddress], esp
-    sub esp, 4<<20
-    mov [ObjectModel.Heap.StartAddress], esp
-    mov [ObjectModel.Heap.NextAllocationAddress], esp
+
+bootstrapStart32:
+    mov esp, BootstrapStackPointer
 
     ;; Make the end of the GC stack frame
     push 0
     mov ebp, esp
     push 0
+
+    call Console.clear
 
     ;; Initialize the bootstrap environment
     call BootstrapEnvironment.Initialize
@@ -21,9 +17,16 @@ _start:
     ;; Run the startup script.
     call BootstrapEnvironment.RunStartupScript
 
-    ;; Exit with the default exit code
-    xor eax, eax
+    mov esi, .helloWorldString.elements
+    mov ecx, .helloWorldString.size
+    call Console.putString
+
     call systemPrimitiveExit
+
+
+.helloWorldString.elements:
+    db 'Hello World!!'
+.helloWorldString.size equ $ - .helloWorldString.elements
 
 ;; systemPrimitivePutString :: Character (EAX)
 GLOBAL systemPrimitivePutChar
@@ -47,24 +50,10 @@ systemPrimitivePutChar:
 ;; systemPrimitivePutString :: Source String (ESI), Source String Size (ECX)
 GLOBAL systemPrimitivePutString
 systemPrimitivePutString:
-    pusha
-
-    mov edx, ecx
-    mov ecx, esi
-    mov ebx, 0
-    mov eax, 4
-    xor esi, esi
-    int 80h
-    
-    popa
-    ret
+    jmp Console.putString
 
 ;; systemPrimitiveExit :: Exit Code (EAX)
 GLOBAL systemPrimitiveExit
 systemPrimitiveExit:
-    mov ebx, eax
-    mov eax, 1
-    int 80h
+    hlt
     jmp $
-
-%include "BootstrapInterpreter.asm"

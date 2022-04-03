@@ -4,9 +4,19 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Build",
+            "label": "Build Bootdisk",
             "type": "shell",
-            "command": "./build.sh",
+            "command": "./build-bootdisk.sh",
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "Build Linux",
+            "type": "shell",
+            "command": "./build-linux.sh",
             "problemMatcher": [],
             "group": {
                 "kind": "build",

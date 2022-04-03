@@ -1,9 +1,10 @@
+SECTION .bootsector
 
 [bits 16]
-[org 0x7c00]
 
 BootSectorsToRead equ 63
 
+GLOBAL bootsectorEntry
 bootsectorEntry:
     mov [bootDrive], dl
 

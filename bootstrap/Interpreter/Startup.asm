@@ -7,6 +7,6 @@ SECTION .data
 GLOBAL BootstrapEnvironment.StartupScript
 BootstrapEnvironment.StartupScript:
 
-INCBIN "StartupScript.sysmel"
+INCBIN "Interpreter/StartupScript.sysmel"
 GLOBAL BootstrapEnvironment.StartupScriptSize
 BootstrapEnvironment.StartupScriptSize equ $ - BootstrapEnvironment.StartupScript
