@@ -9,6 +9,13 @@ bootstrapStart32:
     mov ebp, esp
     push 0
 
+    ;; Use the extended memory for the HEAP
+    mov eax, 0x00100000
+    mov [ObjectModel.Heap.StartAddress], eax
+    mov [ObjectModel.Heap.NextAllocationAddress], eax
+    add eax, 0x00E00000
+    mov [ObjectModel.Heap.EndAddress], eax
+
     call Console.clear
 
     ;; Initialize the bootstrap environment

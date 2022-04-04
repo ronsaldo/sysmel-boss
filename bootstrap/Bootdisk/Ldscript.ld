@@ -17,4 +17,6 @@ SECTIONS {
     .bss : {
         *(.bss)
     }
+
+    __BootProgramEnd__ = . ;
 }
